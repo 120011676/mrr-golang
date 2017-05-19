@@ -1,0 +1,6 @@
+services:
+  build: mrr
+  web:
+    image: mrr
+    ports:
+      - "8080:8080"
