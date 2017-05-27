@@ -14,8 +14,8 @@ type Meet struct {
 	People         string        `json:"people"`
 	Phone          string        `json:"phone"`
 	Password       string        `json:"-"`
-	StartDate      string        `json:"startDate"`
-	EndDate        string        `json:"endDate"`
+	StartDate      time.Time     `json:"startDate"`
+	EndDate        time.Time     `json:"endDate"`
 	Status         bool          `json:"status"`
 	CreateDate     time.Time     `json:"createDate"`
 }

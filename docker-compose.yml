@@ -1,6 +1,7 @@
+version: '3.2'
 services:
-  build: mrr
-  web:
+  server:
     image: mrr
+    build: .
     ports:
       - "8080:8080"

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"gopkg.in/mgo.v2/bson"
 	"log"
+	"time"
 )
 
 const (
@@ -47,8 +48,11 @@ func Query(city string, floor string, room string) ([]entity.Meet, error) {
 	if room != "" {
 		m["room"] = room
 	}
-	err := database.C(TABLE).Find(m).All(&ms)
+	m["startdate"] = bson.M{"$gte": time.Now()}
+	m["status"] = true
+	err := database.C(TABLE).Find(m).Sort("status", "startdate").All(&ms)
 	if err != nil {
+		log.Fatal(err)
 		return nil, errors.New("查询错误")
 	}
 	return ms, nil
