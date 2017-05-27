@@ -67,7 +67,17 @@ func Query(w http.ResponseWriter, r *http.Request) {
 	city := r.FormValue("city")
 	floor := r.FormValue("floor")
 	room := r.FormValue("room")
-	ms, e := service.Query(city, floor, room)
+	startDate := r.FormValue("startDate")
+	endDate := r.FormValue("endDate")
+	var sd time.Time
+	var ed time.Time
+	if startDate != "" {
+		sd, _ = time.Parse("2006-01-02 15:04:05", startDate)
+	}
+	if endDate != "" {
+		ed, _ = time.Parse("2006-01-02 15:04:05", endDate)
+	}
+	ms, e := service.Query(city, floor, room, sd, ed)
 	jms := make([]entity.MeetJson, len(ms))
 	if ms != nil {
 		for i := 0; i < len(ms); i++ {

@@ -43,7 +43,7 @@ func Cancel(id string, password string) error {
 	return nil
 }
 
-func Query(city string, floor string, room string) ([]entity.Meet, error) {
+func Query(city string, floor string, room string, startDate time.Time, endDate time.Time) ([]entity.Meet, error) {
 	session, database := mongodb.Connect()
 	defer session.Close()
 	var ms []entity.Meet
@@ -57,8 +57,14 @@ func Query(city string, floor string, room string) ([]entity.Meet, error) {
 	if room != "" {
 		m["room"] = room
 	}
-	m["startdate"] = bson.M{"$gte": time.Now()}
+	if !startDate.IsZero() {
+		m["startdate"] = bson.M{"$gte": startDate}
+	}
+	if !endDate.IsZero() {
+		m["enddate"] = bson.M{"$lte": endDate}
+	}
 	m["status"] = true
+	log.Print(m)
 	err := database.C(TABLE).Find(m).Sort("status", "startdate").All(&ms)
 	if err != nil {
 		log.Fatal(err)
