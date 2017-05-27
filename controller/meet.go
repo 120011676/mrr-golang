@@ -20,8 +20,8 @@ func Reserve(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 	startDate := r.FormValue("startDate")
 	endDate := r.FormValue("endDate")
-	sd, _ := time.Parse("2006-01-02 15:04:05", startDate)
 	ed, _ := time.Parse("2006-01-02 15:04:05", endDate)
+	sd, _ := time.Parse("2006-01-02 15:04:05", startDate)
 	m := entity.Meet{
 		Id:             bson.NewObjectId(),
 		City:           city,
@@ -68,7 +68,7 @@ func Query(w http.ResponseWriter, r *http.Request) {
 	floor := r.FormValue("floor")
 	room := r.FormValue("room")
 	ms, e := service.Query(city, floor, room)
-	jms := make([]entity.MeetJson,len(ms))
+	jms := make([]entity.MeetJson, len(ms))
 	if ms != nil {
 		for i := 0; i < len(ms); i++ {
 			m := entity.MeetJson{

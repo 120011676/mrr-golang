@@ -14,12 +14,21 @@ const (
 )
 
 func Reserve(m entity.Meet) error {
-	session, database := mongodb.Connect()
-	defer session.Close()
-	err := database.C(TABLE).Insert(&m)
-	if err != nil {
-		log.Fatal(err)
-		return err
+	if m.StartDate.Before(m.EndDate) {
+		session, database := mongodb.Connect()
+		defer session.Close()
+		c, _ := database.C(TABLE).Find(bson.M{"enddate": bson.M{"$gt": m.StartDate}, "startdate": bson.M{"$lt": m.EndDate}}).Count()
+		if c == 0 {
+			err := database.C(TABLE).Insert(&m)
+			if err != nil {
+				log.Fatal(err)
+				return err
+			}
+		} else {
+			return errors.New("预约时间冲突")
+		}
+	} else {
+		return errors.New("预约开始时间必须小于结束时间")
 	}
 	return nil
 }
