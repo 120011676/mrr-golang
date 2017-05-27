@@ -70,14 +70,22 @@ func Reserve(w http.ResponseWriter, r *http.Request) {
 func Cancel(w http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("id")
 	password := r.FormValue("password")
-	e := service.Cancel(id, password)
 	result := entity.Result{Status: false, Date: time.Now().Format("2006-01-02 15:04:05")}
-	if e != nil {
-		result.Code = -100
-		result.Msg = e.Error()
+	if id == "" {
+		result.Code = -1
+		result.Msg = "id不能为空"
+	} else if password == "" {
+		result.Code = -2
+		result.Msg = "密码不能为空"
 	} else {
-		result.Status = true
-		result.Msg = "成功"
+		e := service.Cancel(id, password)
+		if e != nil {
+			result.Code = -100
+			result.Msg = e.Error()
+		} else {
+			result.Status = true
+			result.Msg = "成功"
+		}
 	}
 	json, _ := json.Marshal(result)
 	io.WriteString(w, string(json))
