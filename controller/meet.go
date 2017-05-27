@@ -31,12 +31,12 @@ func Reserve(w http.ResponseWriter, r *http.Request) {
 		ed, edErr := time.Parse("2006-01-02 15:04:05", endDate)
 		if edErr != nil {
 			result.Code = -4
-			result.Msg = "预约结束时间不能格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
+			result.Msg = "预约结束时间格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
 		}
 		sd, sdErr := time.Parse("2006-01-02 15:04:05", startDate)
 		if sdErr != nil {
 			result.Code = -3
-			result.Msg = "预约开始时间不能格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
+			result.Msg = "预约开始时间格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
 		}
 		if edErr == nil && sdErr == nil {
 			m := entity.Meet{
@@ -106,14 +106,14 @@ func Query(w http.ResponseWriter, r *http.Request) {
 		sd, sdErr = time.Parse("2006-01-02 15:04:05", startDate)
 		if sdErr != nil {
 			result.Code = -1
-			result.Msg = "开始时间不能格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
+			result.Msg = "开始时间格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
 		}
 	}
 	if endDate != "" {
 		ed, edErr = time.Parse("2006-01-02 15:04:05", endDate)
 		if edErr != nil {
 			result.Code = -2
-			result.Msg = "结束时间不能格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
+			result.Msg = "结束时间格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
 		}
 	}
 	if sdErr == nil && edErr == nil {
