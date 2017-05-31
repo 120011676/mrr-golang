@@ -28,17 +28,21 @@ func Reserve(w http.ResponseWriter, r *http.Request) {
 		result.Code = -2
 		result.Msg = "预约结束时间不能为空"
 	} else {
-		ed, edErr := time.Parse("2006-01-02 15:04:05", endDate)
-		if edErr != nil {
-			result.Code = -4
-			result.Msg = "预约结束时间格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
-		}
 		sd, sdErr := time.Parse("2006-01-02 15:04:05", startDate)
 		if sdErr != nil {
 			result.Code = -3
 			result.Msg = "预约开始时间格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
+		} else {
+			sd = time.Unix(sd.UnixNano()/1e9, 0)
 		}
-		if edErr == nil && sdErr == nil {
+		ed, edErr := time.Parse("2006-01-02 15:04:05", endDate)
+		if edErr != nil {
+			result.Code = -4
+			result.Msg = "预约结束时间格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
+		} else {
+			ed = time.Unix(ed.UnixNano()/1e9, 0)
+		}
+		if sdErr == nil && edErr == nil {
 			m := entity.Meet{
 				Id:             bson.NewObjectId(),
 				City:           city,
@@ -107,6 +111,8 @@ func Query(w http.ResponseWriter, r *http.Request) {
 		if sdErr != nil {
 			result.Code = -1
 			result.Msg = "开始时间格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
+		} else {
+			sd = time.Unix(sd.UnixNano()/1e9, 0)
 		}
 	}
 	if endDate != "" {
@@ -114,6 +120,8 @@ func Query(w http.ResponseWriter, r *http.Request) {
 		if edErr != nil {
 			result.Code = -2
 			result.Msg = "结束时间格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
+		} else {
+			ed = time.Unix(ed.UnixNano()/1e9, 0)
 		}
 	}
 	if sdErr == nil && edErr == nil {
