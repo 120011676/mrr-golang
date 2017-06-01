@@ -17,8 +17,7 @@ func Reserve(m entity.Meet) error {
 	if m.StartDate.Before(m.EndDate) {
 		session, database := mongodb.Connect()
 		defer session.Close()
-		c, _ := database.C(TABLE).Find(bson.M{"startdate": bson.M{"$lte": m.StartDate}, "enddate": bson.M{"$gte": m.EndDate}, "status": true}).Count()
-		// c, _ := database.C(TABLE).Find(bson.M{"enddate": bson.M{"$lte": m.StartDate}, "startdate": bson.M{"$gte": m.EndDate}, "status": true}).Count()
+		c, _ := database.C(TABLE).Find(bson.M{"startdate": bson.M{"$not": bson.M{"$gte": m.EndDate}}, "enddate": bson.M{"$not": bson.M{"$lte": m.StartDate}}, "status": true}).Count()
 		log.Print(c)
 		if c == 0 {
 			err := database.C(TABLE).Insert(&m)
@@ -59,10 +58,16 @@ func Query(city string, floor string, room string, startDate time.Time, endDate 
 	if room != "" {
 		m["room"] = room
 	}
-	if !startDate.IsZero() {
+	if !startDate.IsZero() && !endDate.IsZero() {
+		if startDate.Before(endDate) {
+			m["startdate"] = bson.M{"$not": bson.M{"$gte": endDate}}
+			m["enddate"] = bson.M{"$not": bson.M{"$lte": startDate}}
+		} else {
+			return nil, errors.New("开始时间必须小于结束时间")
+		}
+	} else if !startDate.IsZero() {
 		m["startdate"] = bson.M{"$lte": startDate}
-	}
-	if !endDate.IsZero() {
+	} else if !endDate.IsZero() {
 		m["enddate"] = bson.M{"$gte": endDate}
 	}
 	m["status"] = true
