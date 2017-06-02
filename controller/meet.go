@@ -28,14 +28,14 @@ func Reserve(w http.ResponseWriter, r *http.Request) {
 		result.Code = -2
 		result.Msg = "预约结束时间不能为空"
 	} else {
-		sd, sdErr := time.Parse("2006-01-02 15:04:05", startDate)
+		sd, sdErr := time.ParseInLocation("2006-01-02 15:04:05", startDate, time.Local)
 		if sdErr != nil {
 			result.Code = -3
 			result.Msg = "预约开始时间格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
 		} else {
 			sd = time.Unix(sd.UnixNano()/1e9, 0)
 		}
-		ed, edErr := time.Parse("2006-01-02 15:04:05", endDate)
+		ed, edErr := time.ParseInLocation("2006-01-02 15:04:05", endDate, time.Local)
 		if edErr != nil {
 			result.Code = -4
 			result.Msg = "预约结束时间格式不正确，必须是yyyy-MM-dd HH:mm:ss格式"
