@@ -1,7 +1,20 @@
 version: '3.2'
 services:
   server:
-    image: mrr
+    image: mrr-golang
     build: .
+    networks:
+      - mrr
+    environment:
+      - MONGO_HOSTNAME=mongdb
+      - MONGO_DB=mrr
     ports:
       - "8080:8080"
+  mongdb:
+    image: mongo
+    networks:
+      - mrr
+networks:
+  mrr:
+    driver: bridge
+

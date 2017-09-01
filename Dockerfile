@@ -11,10 +11,10 @@ RUN apk update && apk add ca-certificates && \
 # ENV MONGO_ADDR 10.3.30.183
 # ENV MONGO_DB mrr
 
-ENV WORK_DIR /opt/changhong-mrr/
+ENV WORK_DIR /opt/mrr/
 
-COPY mrr ${WORK_DIR}
+COPY mrr-golang ${WORK_DIR}
 
 EXPOSE 8080
 WORKDIR ${WORK_DIR}
-CMD ./mrr
+CMD ./mrr-golang

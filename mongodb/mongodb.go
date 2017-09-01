@@ -7,7 +7,7 @@ import (
 )
 
 func Connect() (*mgo.Session, *mgo.Database) {
-	mongoAddr := os.Getenv("MONGO_ADDR")
+	mongoAddr := os.Getenv("MONGO_HOSTNAME")
 	if mongoAddr == "" {
 		mongoAddr = "10.3.30.183"
 	}
