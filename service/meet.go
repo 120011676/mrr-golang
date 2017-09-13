@@ -17,7 +17,7 @@ func Reserve(m entity.Meet) error {
 	if m.StartDate.Before(m.EndDate) {
 		session, database := mongodb.Connect()
 		defer session.Close()
-		c, _ := database.C(TABLE).Find(bson.M{"startdate": bson.M{"$not": bson.M{"$gte": m.EndDate}}, "enddate": bson.M{"$not": bson.M{"$lte": m.StartDate}}, "status": true}).Count()
+		c, _ := database.C(TABLE).Find(bson.M{"status": true, "city": m.City, "floor": m.Floor, "room": m.Room, "startdate": bson.M{"$not": bson.M{"$gte": m.EndDate}}, "enddate": bson.M{"$not": bson.M{"$lte": m.StartDate}}}).Count()
 		log.Print(c)
 		if c == 0 {
 			err := database.C(TABLE).Insert(&m)
